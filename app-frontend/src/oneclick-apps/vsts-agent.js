@@ -11,8 +11,8 @@
 
         var VSTS_ACCOUNT = 'VSTS_ACCOUNT';
         var VSTS_TOKEN = 'VSTS_TOKEN';
-        var VSTS_AGENT = '$(hostname)';
-        var VSTS_POOL = 'Default';
+        var VSTS_AGENT = 'VSTS_AGENT';
+        var VSTS_POOL = 'VSTS_POOL';
         var DOCKER_TAG = 'DOCKER_TAG';
         var VSTS_AGENT_CONTAINER_NAME = 'VSTS_AGENT_CONTAINER_NAME';
 
