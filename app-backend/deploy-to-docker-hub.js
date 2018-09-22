@@ -77,10 +77,10 @@ function fetchTagsFromHub() {
             }
         }
 
-        if (!isVersionValid || !highestTagValue) {
-            console.log('The version you are pushing is not valid!');
-            return;
-        }
+        // if (!isVersionValid || !highestTagValue) {
+        //     console.log('The version you are pushing is not valid!');
+        //     return;
+        // }
 
         console.log('Pushing ' + version);
 
