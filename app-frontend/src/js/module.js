@@ -1,2 +1,2 @@
 angular
-    .module('RDash', ['ui.bootstrap', 'ui.router', 'ngCookies', 'toastr', 'ngAnimate', 'oc.lazyLoad']);
+    .module('RDash', ['ui.bootstrap', 'ui.router', 'ngCookies', 'toastr', 'ngAnimate', 'oc.lazyLoad', 'angularMoment']);

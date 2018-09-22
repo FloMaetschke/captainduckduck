@@ -1,3 +1,8 @@
+# THIS IS JUST A FORK
+I have created this project as a fork of the original to only add additional oneclick-apps. Please use the original project: https://github.com/githubsaturn/captainduckduck
+
+
+
 ### Easiest app/database deployment platform and webserver package for your NodeJS, Python, PHP applications. No Docker, nginx knowledge required! &nbsp; [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2Fgithubsaturn%2Fcaptainduckduck&via=saturn4me&text=I%20found%20the%20easiest%20webserver%20package%20for%20NodeJS%2C%20PHP%2C%20MySQL%2C%20WordPress%20and%20everything%21&hashtags=captainduckduck%20nodejs%20docker%20nginx%20webdev)
 
 [![YouTube](https://raw.githubusercontent.com/githubsaturn/captainduckduck/master/graphics/screenshots.gif)](https://www.youtube.com/watch?v=XDrTmGSDW3s)

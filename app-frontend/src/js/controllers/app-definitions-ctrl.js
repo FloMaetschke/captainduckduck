@@ -25,6 +25,7 @@ function AppDefinitionCtrl($scope, apiManager, captainToast, $state, $location) 
                 if (app.versions[j].version === app.deployedVersion) {
                     app.deployedGitHash = app.versions[j].gitHash || 'n/a';
                     app.deployedTimeStamp = new Date(app.versions[j].timeStamp).toLocaleString();
+                    app.deployedTimeSince = new Date(app.versions[j].timeStamp);
                     break;
                 }
             }
