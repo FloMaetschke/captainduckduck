@@ -5,39 +5,57 @@
     var ERROR = 'danger';
     var INFO = 'info';
 
-    oneClickAppsRepository["mongodb2"] = function (apiManager) {
+    oneClickAppsRepository["vsts-agent"] = function (apiManager) {
 
         var getErrorMessageIfExists = apiManager.getErrorMessageIfExists;
 
-        var MONGO_INITDB_ROOT_USERNAME = 'MONGO_INITDB_ROOT_USERNAME';
-        var MONGO_INITDB_ROOT_PASSWORD = 'MONGO_INITDB_ROOT_PASSWORD';
+        var VSTS_ACCOUNT = 'VSTS_ACCOUNT';
+        var VSTS_TOKEN = 'VSTS_TOKEN';
+        var VSTS_AGENT = '$(hostname)';
+        var VSTS_POOL = 'Default';
         var DOCKER_TAG = 'DOCKER_TAG';
-        var MONGO_CONTAINER_NAME = 'MONGO_CONTAINER_NAME';
+        var VSTS_AGENT_CONTAINER_NAME = 'VSTS_AGENT_CONTAINER_NAME';
 
         var step1next = {};
 
         step1next.data = [];
         step1next.data.push({
-            label: 'MongoDB2 Container Name',
-            id: MONGO_CONTAINER_NAME,
+            label: 'VSTS Agent Container Name',
+            id: VSTS_AGENT_CONTAINER_NAME,
             type: 'text'
         });
 
         step1next.data.push({
-            label: 'OPTIONAL: Docker Tag (default "3.2")',
-            labelDesc: 'https://hub.docker.com/r/library/mongo/tags/',
+            label: 'OPTIONAL: Docker Tag (default "latest")',
+            labelDesc: 'https://hub.docker.com/r/microsoft/vsts-agent/tags/',
             id: DOCKER_TAG,
             type: 'text'
         });
 
         step1next.data.push({
-            label: 'MongoDB Root Username',
-            id: MONGO_INITDB_ROOT_USERNAME,
+            label: 'VSTS Account',
+            labelDesc: 'The name of the Visual Studio account. Take only the account part from your address, e.g. http://{account}.visualstudio.com',
+            id: VSTS_ACCOUNT,
             type: 'text'
         });
         step1next.data.push({
-            label: 'MongoDB Root Password',
-            id: MONGO_INITDB_ROOT_PASSWORD,
+            label: 'VSTS Token',
+            labelDesc: 'A personal access token (PAT) for the Visual Studio account that has been given at least the Agent Pools (read, manage) scope.',
+            id: VSTS_TOKEN,
+            type: 'text'
+        });
+
+        step1next.data.push({
+            label: 'VSTS Agent',
+            labelDesc: 'The name of the agent.',
+            id: VSTS_AGENT,
+            type: 'text'
+        });
+
+        step1next.data.push({
+            label: 'VSTS Pool',
+            labelDesc: 'The name of the agent pool.',
+            id: VSTS_POOL,
             type: 'text'
         });
 
@@ -50,9 +68,7 @@
             function endWithSuccess() {
                 step1Callback({
                     message: {
-                        text: 'MongoDB is deployed and available as srv-captain--' + data[MONGO_CONTAINER_NAME]
-                            + ':27017 to other apps. For example with NodeJS: mongoose.connect("mongodb://srv-captain--'
-                            + data[MONGO_CONTAINER_NAME] + '/mydatabase", { useMongoClient: true });',
+                        text: 'VSTS Agent is deployed and published as ' + data[VSTS_AGENT] +'.',
                         type: SUCCESS
                     },
                     next: null // this can be similar to step1next, in that case the flow continues...
@@ -73,12 +89,16 @@
 
             var errorMessage = null;
 
-            if (!data[MONGO_CONTAINER_NAME]) {
+            if (!data[VSTS_AGENT_CONTAINER_NAME]) {
                 errorMessage = 'Container name is required!';
-            } else if (!data[MONGO_INITDB_ROOT_USERNAME]) {
-                errorMessage = 'Root username is required!';
-            } else if (!data[MONGO_INITDB_ROOT_PASSWORD]) {
-                errorMessage = 'Root password is required!';
+            } else if (!data[VSTS_ACCOUNT]) {
+                errorMessage = 'Account is required!';
+            } else if (!data[VSTS_TOKEN]) {
+                errorMessage = 'Acess token is required!';
+            } else if (!data[VSTS_AGENT]) {
+                errorMessage = 'Agent name is required!';
+            } else if (!data[VSTS_POOL]) {
+                errorMessage = 'Pool name is required!';
             }
 
             if (errorMessage) {
@@ -86,20 +106,28 @@
                 return;
             }
 
-            var appName = data[MONGO_CONTAINER_NAME];
-            var dockerTag = data[DOCKER_TAG] || '3.2';
+            var appName = data[VSTS_AGENT_CONTAINER_NAME];
+            var dockerTag = data[DOCKER_TAG] || 'latest';
             var envVars = [{
-                key: MONGO_INITDB_ROOT_USERNAME,
-                value: data[MONGO_INITDB_ROOT_USERNAME]
+                key: VSTS_ACCOUNT,
+                value: data[VSTS_ACCOUNT]
             }, {
-                key: MONGO_INITDB_ROOT_PASSWORD,
-                value: data[MONGO_INITDB_ROOT_PASSWORD]
+                key: VSTS_TOKEN,
+                value: data[VSTS_TOKEN]
+            },
+            {
+                key: VSTS_AGENT,
+                value: data[VSTS_AGENT]
+            },
+            {
+                key: VSTS_POOL,
+                value: data[VSTS_POOL]
             }];
             var volumes = [{
-                volumeName: appName + '-mongo-db-vol',
+                volumeName: appName + '-vsts-agent-vol',
                 containerPath: '/data/db'
             }, {
-                volumeName: appName + '-mongo-cfg-vol',
+                volumeName: appName + '-vsts-agent-vol',
                 containerPath: '/data/configdb'
             }];
 
@@ -141,7 +169,7 @@
                 var captainDefinitionContent = {
                     schemaVersion: 1,
                     dockerfileLines: [
-                        "FROM mongo:" + dockerTag
+                        "FROM microsoft/vsts-agent:" + dockerTag
                     ]
                 }
 
@@ -163,9 +191,7 @@
         var step1 = {};
         step1.message = {
             type: INFO,
-            text: 'MongoDB is a cross-platform document-oriented database. Classified as a NoSQL database program, MongoDB uses JSON-like documents with schemas. ' +
-                '\n\n After installation on CaptainDuckDuck, it will be available as srv-captain--YOUR_CONTAINER_NAME at port 27017 to other CaptainDuckDuck apps.' +
-                '\n\n Enter your MongoDB Configuration parameters and click on next. It will take about a minute for the process to finish.'
+            text: 'Official image for the Visual Studio Team Services (VSTS) agent.'
         }
         step1.next = step1next;
         return step1;
